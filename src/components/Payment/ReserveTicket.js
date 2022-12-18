@@ -14,7 +14,8 @@ export default function ReserveTicket({ bill }) {
       ticketTypeId: ticketType[0].id
     };
 
-    return await createTicket( body, token );
+    await createTicket( body, token );
+    window.location.reload();
   }
 
   return(
@@ -49,4 +50,6 @@ const Button = styled.button`
   font-family: 'Roboto';
   font-size: 14px;
   text-align: center;
+
+  cursor: pointer;
 `;

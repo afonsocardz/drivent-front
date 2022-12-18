@@ -1,7 +1,7 @@
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import { useEffect, useState } from 'react';
 
-import PaymentForm from '../../../components/Payment';
+import PaymentData from '../../../components/Payment/index';
 import NoEnrollment from '../../../components/Payment/NoEnrollment';
 
 export default function Payment() {
@@ -12,7 +12,7 @@ export default function Payment() {
     const token = JSON.parse(userData).token;
   
     const promise = getPersonalInformations(token);
-    promise.then(() => setRender(<PaymentForm/>));
+    promise.then(() => setRender(<PaymentData/>));
     promise.catch(() => setRender(<NoEnrollment/>));
   }, []);
 

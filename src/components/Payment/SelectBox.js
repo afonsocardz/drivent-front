@@ -1,3 +1,4 @@
+import { Card } from '@material-ui/core';
 import styled from 'styled-components';
 
 export default function SelectBox( { type, price, state, setState } ) {
@@ -22,6 +23,8 @@ const SelectBoxDiv = styled.div`
   justify-content: center;
   align-items: center;
   background-color:${props => props.type === props.state ? '#FFEED2':'#FFFFFF'};
+
+  cursor: pointer;
 
   h1{
     font-family: 'Roboto';
