@@ -1,10 +1,26 @@
 import styled from 'styled-components';
+import { createTicket, getTicketTypes } from '../../services/ticketsApi';
 
 export default function ReserveTicket({ bill }) {
+  async function postTicket() {
+    const userData = localStorage.getItem('userData');
+
+    const token = JSON.parse(userData).token;
+
+    const ticketTypes = await getTicketTypes(token);
+    const ticketType = ticketTypes.filter(item => item.price === bill);
+
+    const body = {
+      ticketTypeId: ticketType[0].id
+    };
+
+    return await createTicket( body, token );
+  }
+
   return(
     <>
       <P>Fechado! O total ficou em <strong>R$ { bill / 100 }</strong>. Agora é só confirmar:</P>
-      <Button>RESERVAR INGRESSO</Button>
+      <Button onClick={postTicket}>RESERVAR INGRESSO</Button>
     </>
   );
 }
