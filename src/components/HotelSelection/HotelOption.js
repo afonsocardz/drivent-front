@@ -1,55 +1,47 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 
-const SINGLE = 1;
-const DOUBLE = 2;
-const TRIPLE = 3;
-
 export default function HotelOption({ hotel }) {
   const [isSelect, setIsSelect] = useState(false);
-
-  function checkRoomTypes(rooms) {
-    const hash = {};
-    for (let i = 0; i < rooms.length; i++) {
-      if (!hash[rooms[i].capacity]) {
-        if (rooms[i].capacity === SINGLE) {
-          hash['single'] = 'Single';
-        }
-        if (rooms[i].capacity === DOUBLE) {
-          hash['double'] = 'Double';
-        }
-        if (rooms[i].capacity >= TRIPLE) {
-          hash['triple'] = 'Triple';
-        }
-      }
-    }
-    return Object.values(hash);
-  }
-
-  function vacancyQty(hotel) {
-    return hotel.Rooms.reduce(
-      (prev, room) => (prev.capacity - prev._count.Booking) + (room.capacity - room._count.Booking));
-  }
 
   function clickHandler() {
     setIsSelect(!isSelect);
   }
 
   return (
-    <>
-      <HotelContainer isSelect={isSelect} onClick={clickHandler}>
+    <OptionContainer>
+      <input onChange={clickHandler} type={'radio'} id={`hotel-${hotel.id}`} />
+      <Label htmlFor={`hotel-${hotel.id}`}></Label>
+      <HotelContainer isSelect={hotel.hasBooking ? true : isSelect}>
         <ImageContainer>
           <Image src={hotel.image} alt='Fachada do hotel' />
         </ImageContainer>
         <HotelName>{hotel.name}</HotelName>
         <HotelTitle>{'Tipo de Acomodação:'}</HotelTitle>
-        <HotelInfo>{hotel.Rooms && checkRoomTypes(hotel.Rooms).join(', ')}</HotelInfo>
+        <HotelInfo>{hotel.roomTypes}</HotelInfo>
         <HotelTitle>{'Vagas disponíveis:'}</HotelTitle>
-        <HotelInfo>{vacancyQty(hotel)}</HotelInfo>
+        <HotelInfo>{hotel.vacancyQty}</HotelInfo>
       </HotelContainer>
-    </>
+    </OptionContainer>
   );
 }
+
+const Label = styled.label`
+  top:0;
+  content: '';
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: pointer;
+`;
+
+const OptionContainer = styled.div`
+  position: relative;
+  width: 196px;
+  height: 294px;
+`;
 
 const HotelInfo = styled.h5`
   font-size: 12px;
@@ -69,8 +61,10 @@ const HotelName = styled.h4`
 `;
 
 const HotelContainer = styled.div`
-  width: 196px;
-  height: 294px;
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
   padding: 16px 14px;
   background-color: ${({ isSelect }) => !isSelect ? '#EBEBEB' : '#FFEED2'};
   border-radius: 10px;
