@@ -1,27 +1,25 @@
+import { useState } from 'react';
 import styled from 'styled-components';
-import { createTicket, getTicketTypes } from '../../services/ticketsApi';
+import useSaveTicket from '../../hooks/api/useSaveTicket';
+import useTicketType from '../../hooks/api/useTicketType';
 
 export default function ReserveTicket({ bill }) {
-  async function postTicket() {
-    const userData = localStorage.getItem('userData');
+  const { ticketType }  = useTicketType();
+  const { saveTicket } = useSaveTicket();
 
-    const token = JSON.parse(userData).token;
+  let ticketTypeId;
 
-    const ticketTypes = await getTicketTypes(token);
-    const ticketType = ticketTypes.filter(item => item.price === bill);
-
-    const body = {
-      ticketTypeId: ticketType[0].id
-    };
-
-    await createTicket( body, token );
-    window.location.reload();
+  if(ticketType) {
+    ticketTypeId = ticketType.filter(item =>  item.price === bill )[0].id;
   }
-
+  
   return(
     <>
       <P>Fechado! O total ficou em <strong>R$ { bill / 100 }</strong>. Agora é só confirmar:</P>
-      <Button onClick={postTicket}>RESERVAR INGRESSO</Button>
+      <Button onClick = {() => { 
+        saveTicket({ ticketTypeId });
+        window.location.reload();
+      } }>RESERVAR INGRESSO</Button>
     </>
   );
 }

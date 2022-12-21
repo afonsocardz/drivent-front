@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import useTicket from '../../hooks/api/useTicket';
 import { getPayment } from '../../services/paymentApi';
 import { getTicket } from '../../services/ticketsApi';
 import CreditCardForm from './CreditCardForm';
@@ -7,17 +8,17 @@ import PaymentConfirm from './PaymentConfirm';
 
 export default function PaymentScreen( { data } ) {
   const [ paid, setPaid ] = useState(false);
+  let status = false;
+
+  const { ticket } = useTicket();
 
   useEffect(() => {
-    const userData = localStorage.getItem('userData');
-    const token = JSON.parse(userData).token;
-
-    const ticketId = getTicket(token);
-    ticketId.then((ticket) => {
-      const payment = getPayment(token, ticket.id);
-      payment.then(() => setPaid(true));
-    });
-  }, []);
+    if(ticket) {
+      if(ticket.status === 'PAID') {
+        setPaid(true);
+      }
+    }
+  } );
 
   return(
     <>
