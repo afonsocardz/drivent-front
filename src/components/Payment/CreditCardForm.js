@@ -130,10 +130,15 @@ const Title = styled.h1`
 `;
 
 const CreditCardDiv = styled.div`
+  position: absolute;
   display: flex;
+  margin-left: 35px;
 `;
 
 const Form = styled.form`
+  margin-left: 40px;
+  position: absolute;
+  margin-left: 120%;
   div{
     display: flex;
     justify-content: flex-start;
@@ -198,4 +203,6 @@ const Submit = styled.button`
   text-align: center;
 
   cursor: pointer;
+  position: relative;
+  right: 95%;
 `;
