@@ -8,7 +8,7 @@ import ReserveTicket from './ReserveTicket';
 import 'react-credit-cards-2/es/styles-compiled.css';
 
 export default function OrderTicket() {
-  const [selected, setSelected] = useState();
+  const [ selected, setSelected ] = useState();
   const [ hotel, setHotel ] = useState();
 
   const bill = selected === 'Online' ? 10000 : hotel === 'Sem Hotel' ? 25000 : 60000;
@@ -19,7 +19,7 @@ export default function OrderTicket() {
       <SubTitle>Primeiro, escolha sua modalidade de ingresso</SubTitle>
       <SelectType state={selected} setState={setSelected}></SelectType>
       {selected === 'Presencial' ?  <SelectHotel state={hotel} setState={setHotel}></SelectHotel>:''}
-      {selected === 'Online' || hotel ? <ReserveTicket bill={bill}/>:''}
+      {selected === 'Online' || hotel ? <ReserveTicket bill={bill} />:''}
     </>
   );
 }
