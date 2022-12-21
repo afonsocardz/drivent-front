@@ -1,14 +1,16 @@
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import HotelOption from './HotelOption';
+import { useState } from 'react';
 
 export default function HotelSelection({ hotels }) {
+  const [selected, setSelected] = useState({ index: false, hotel: null });
   return (
     <Container>
       <StyledTypography variant="h4">Escolha de Hotel e Quarto</StyledTypography>
-      <SubTitle>Primeiro, escolha seu hotel</SubTitle>
+      <SubTitle>{!hotels[0].hasBooking ? 'Primeiro, escolha seu hotel:' : 'Você já escolheu seu quarto:'}</SubTitle>
       <HotelsWrapper>
-        {hotels && hotels.map(hotel => <HotelOption key={hotel.id} hotel={hotel}></HotelOption>)}
+        {hotels && hotels.map((hotel, index) => <HotelOption key={hotel.id} index={index} setSelected={setSelected} selected={selected} hotel={hotel}></HotelOption>)}
       </HotelsWrapper>
     </Container>
   );
