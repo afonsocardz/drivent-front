@@ -1,16 +1,28 @@
 import styled from 'styled-components';
 
-export default function HotelOption({ hotel, setSelected, selected, index }) {
+export default function HotelOption({ hotel, setSelected, selected }) {
   function clickHandler() {
-    setSelected({ index, hotel });
+    setSelected({ hotel });
   }
 
   function roommatesHandler(roommates) {
     return roommates > 0 ? 'Você e mais ' + roommates : 'Você';
   }
 
+  function selectionHandler() {
+    if (hotel.hasBooking) {
+      return true;
+    }
+    if (selected.hotel) {
+      if (selected.hotel.id === hotel.id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   return (
-    <HotelContainer onClick={clickHandler} isSelect={hotel.hasBooking ? true : selected.index === index ? true : false}>
+    <HotelContainer onClick={clickHandler} isSelect={selectionHandler()}>
       <ImageContainer>
         <Image src={hotel.image} alt='Fachada do hotel' />
       </ImageContainer>
