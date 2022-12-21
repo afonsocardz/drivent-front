@@ -1,53 +1,25 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 
-const SINGLE = 1;
-const DOUBLE = 2;
-const TRIPLE = 3;
-
-export default function HotelOption({ hotel }) {
-  const [isSelect, setIsSelect] = useState(false);
-
-  function checkRoomTypes(rooms) {
-    const hash = {};
-    for (let i = 0; i < rooms.length; i++) {
-      if (!hash[rooms[i].capacity]) {
-        if (rooms[i].capacity === SINGLE) {
-          hash['single'] = 'Single';
-        }
-        if (rooms[i].capacity === DOUBLE) {
-          hash['double'] = 'Double';
-        }
-        if (rooms[i].capacity >= TRIPLE) {
-          hash['triple'] = 'Triple';
-        }
-      }
-    }
-    return Object.values(hash);
-  }
-
-  function vacancyQty(hotel) {
-    return hotel.Rooms.reduce(
-      (prev, room) => (prev.capacity - prev._count.Booking) + (room.capacity - room._count.Booking));
-  }
-
+export default function HotelOption({ hotel, setSelected, selected, index }) {
   function clickHandler() {
-    setIsSelect(!isSelect);
+    setSelected({ index, hotel });
+  }
+
+  function roommatesHandler(roommates) {
+    return roommates > 0 ? 'Você e mais ' + roommates : 'Você';
   }
 
   return (
-    <>
-      <HotelContainer isSelect={isSelect} onClick={clickHandler}>
-        <ImageContainer>
-          <Image src={hotel.image} alt='Fachada do hotel' />
-        </ImageContainer>
-        <HotelName>{hotel.name}</HotelName>
-        <HotelTitle>{'Tipo de Acomodação:'}</HotelTitle>
-        <HotelInfo>{hotel.Rooms && checkRoomTypes(hotel.Rooms).join(', ')}</HotelInfo>
-        <HotelTitle>{'Vagas disponíveis:'}</HotelTitle>
-        <HotelInfo>{vacancyQty(hotel)}</HotelInfo>
-      </HotelContainer>
-    </>
+    <HotelContainer onClick={clickHandler} isSelect={hotel.hasBooking ? true : selected.index === index ? true : false}>
+      <ImageContainer>
+        <Image src={hotel.image} alt='Fachada do hotel' />
+      </ImageContainer>
+      <HotelName>{hotel.name}</HotelName>
+      <HotelTitle>{hotel.hasBooking ? 'Quarto reservado' : 'Tipos de Acomodação'}</HotelTitle>
+      <HotelInfo>{hotel.hasBooking ? hotel.hasBooking.roomName : hotel.roomTypes}</HotelInfo>
+      <HotelTitle>{hotel.hasBooking ? 'Pessoas no seu quarto' : 'Vagas disponíveis'}</HotelTitle>
+      <HotelInfo>{hotel.hasBooking ? roommatesHandler(hotel.hasBooking.roommates) : hotel.vacancyQty}</HotelInfo>
+    </HotelContainer>
   );
 }
 
