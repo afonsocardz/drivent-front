@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-import { postBooking } from '../../services/bookingApi';
+import useSaveBooking from '../../hooks/api/useSaveBooking';
 
 export default function RegisterBooking({ roomSelected }) {
-  const userData = localStorage.getItem('userData');
-  const token = JSON.parse(userData).token;
+  const { saveBooking } = useSaveBooking();
 
   return <Reserved onClick={newBooking}>{roomSelected === 0 ? 'ESCOLHA UM QUARTO' : 'RESERVAR QUARTO'}</Reserved>;
 
   function newBooking() {
     const body = { roomId: roomSelected };
-    const postB = postBooking(token, body);
+    const postB = saveBooking(body);
     postB.then((data) => window.location.reload()).catch((err) => console.log(err));
   }
 }
