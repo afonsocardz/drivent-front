@@ -1,16 +1,29 @@
 import styled from 'styled-components';
-import { postBooking } from '../../services/bookingApi';
+import useSaveBooking from '../../hooks/api/useSaveBooking';
+import useUpdateBooking from '../../hooks/api/useUpdateBooking';
 
-export default function RegisterBooking({ roomSelected }) {
-  const userData = localStorage.getItem('userData');
-  const token = JSON.parse(userData).token;
-
-  return <Reserved onClick={newBooking}>{roomSelected === 0 ? 'ESCOLHA UM QUARTO' : 'RESERVAR QUARTO'}</Reserved>;
+export default function RegisterBooking({ roomSelected, booking }) {
+  const { saveBooking } = useSaveBooking();
+  const { updateBooking } = useUpdateBooking();
 
   function newBooking() {
     const body = { roomId: roomSelected };
-    const postB = postBooking(token, body);
+    const postB = saveBooking(body);
     postB.then((data) => window.location.reload()).catch((err) => console.log(err));
+  }
+
+  function changeRoom() {
+    const body = { roomId: roomSelected };
+    const updateB = updateBooking(body);
+    updateB.then((data) => window.location.reload()).catch((err) => console.log(err));  
+  }
+
+  if(!booking) {
+    return <Reserved onClick={newBooking}>{roomSelected === 0 ? 'ESCOLHA UM QUARTO' : 'RESERVAR QUARTO'}</Reserved>;
+  } else if(roomSelected !== booking.Room.id && roomSelected) {
+    return <Reserved onClick={changeRoom}>TROCAR QUARTO</Reserved>;
+  } else {
+    return <></>;
   }
 }
 

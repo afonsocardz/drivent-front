@@ -2,14 +2,22 @@ import styled from 'styled-components';
 import IconCapacity from './IconCapacity.js';
 import { toast } from 'react-toastify';
 
-export default function RoomsOption({ room, index, setRoomSelected, roomSelected }) {
+export default function RoomsOption({ room, index, setRoomSelected, roomSelected, booking }) {
+  const isRoomFull = room._count.Booking === room.capacity;
+
   function roomChoice(room) {
-    if (room._count.Booking === room.capacity) {
+    if (isRoomFull) {
       //TODO mensagem quarto sem vaga
       toast(`O quarto ${room.name} já está com sua capacidade máxima!`);
       return false;
     }
     setRoomSelected(room.id);
+  }
+
+  let roomId = 0;
+
+  if(booking) {
+    roomId = booking.Room.id;
   }
 
   return (
@@ -21,7 +29,7 @@ export default function RoomsOption({ room, index, setRoomSelected, roomSelected
       booking={room._count.Booking}
     >
       <Number>{room.name}</Number>
-      <Icon>{IconCapacity(room)}</Icon>
+      <Icon>{IconCapacity(room, roomId)}</Icon>
     </Room>
   );
 }
