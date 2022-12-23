@@ -3,7 +3,6 @@ import { BsFillPersonFill } from 'react-icons/bs';
 import styled from 'styled-components';
 
 export default function IconCapacity(room, roomIdInBooking) {
-  console.log(room.id, roomIdInBooking);
   function renderIcons(room) {
     const arr = [];
     for (let i = 0; i < room.capacity; i++) {

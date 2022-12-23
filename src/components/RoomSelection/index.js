@@ -5,7 +5,7 @@ import RegisterBooking from './RegisterBooking.js';
 import useBooking from '../../hooks/api/useBooking';
 
 export default function RoomsSelection({ hotelSelected }) {
-  const [roomSelected, setRoomSelected] = useState(0);
+  const [roomSelected, setRoomSelected] = useState();
   const [booking, setBooking] = useState();
   const { getBooking } = useBooking();
 
@@ -19,7 +19,7 @@ export default function RoomsSelection({ hotelSelected }) {
           <RoomsOption key={room.id} room={room} index={room.id} roomSelected={roomSelected} setRoomSelected={setRoomSelected} booking={booking}/>
         ))}
       </Rooms>
-      <RegisterBooking roomSelected={roomSelected} />
+      <RegisterBooking roomSelected={roomSelected} booking={booking}/>
     </Container>
   );
 }
