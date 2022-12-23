@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 
 export default function HotelOption({ hotel, setSelected, selected }) {
   function clickHandler() {
@@ -24,7 +25,7 @@ export default function HotelOption({ hotel, setSelected, selected }) {
   return (
     <HotelContainer onClick={clickHandler} isSelect={selectionHandler()}>
       <ImageContainer>
-        <Image src={hotel.image} alt='Fachada do hotel' />
+        <Image src={hotel.image} alt="Fachada do hotel" />
       </ImageContainer>
       <HotelName>{hotel.name}</HotelName>
       <HotelTitle>{hotel.hasBooking ? 'Quarto reservado' : 'Tipos de Acomodação'}</HotelTitle>
@@ -56,7 +57,7 @@ const HotelContainer = styled.div`
   width: 196px;
   height: 294px;
   padding: 16px 14px;
-  background-color: ${({ isSelect }) => !isSelect ? '#EBEBEB' : '#FFEED2'};
+  background-color: ${({ isSelect }) => (!isSelect ? '#EBEBEB' : '#FFEED2')};
   border-radius: 10px;
   cursor: pointer;
 `;
