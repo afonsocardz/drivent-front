@@ -1,33 +1,50 @@
 import styled from 'styled-components';
-import IconCapacity from './IconCapacity.js';
 import { toast } from 'react-toastify';
+import { useState } from 'react';
+import Option from './Option.js';
 
-export default function RoomsOption({ room, index, setRoomSelected, roomSelected, booking }) {
-  function roomChoice(room) {
-    if (room._count.Booking === room.capacity) {
-      //TODO mensagem quarto sem vaga
-      toast(`O quarto ${room.name} já está com sua capacidade máxima!`);
-      return false;
+function optionInitialState(room, roomSelected) {
+  const arr = [];
+  const vacancies = room.capacity - room._count.Booking;
+  for (let i = 0; i < room.capacity; i++) {
+    const option = {
+      id: i,
+      status: 'empty',
+      roomId: room.id,
+    };
+    if (i < vacancies) {
+      arr.push(option);
+    } else {
+      if (roomSelected ) {
+        arr.push({ ...option, status: 'selected' });
+      } else {
+        arr.push({ ...option, status: 'reserved' });
+      }
     }
-    setRoomSelected(room.id);
   }
+  return arr;
+}
 
-  let roomId = 0;
+export default function RoomsOption({ room, setRoomSelected, roomSelected }) {
+  const [options, setOptions] = useState(optionInitialState(room, roomSelected));
+  function roomChoice(room) {
+    const isNotAvailable = room._count.Booking === room.capacity;
 
-  if(booking) {
-    roomId = booking.Room.id;
+    isNotAvailable ?
+      toast(`O quarto ${room.name} já está com sua capacidade máxima!`) :
+      setRoomSelected(room.id);
   }
 
   return (
     <Room
       onClick={() => roomChoice(room)}
       isSelect={roomSelected}
-      i={index}
       capacity={room.capacity}
+      i={room.id}
       booking={room._count.Booking}
     >
       <Number>{room.name}</Number>
-      <Icon>{IconCapacity(room, roomId)}</Icon>
+      {options[0] && options.map(option => <Option key={option.id} option={option} setOptions={setOptions} roomSelected={roomSelected} />)}
     </Room>
   );
 }
@@ -56,9 +73,4 @@ const Room = styled.div`
 
 const Number = styled.div`
   font-size: 16px;
-`;
-
-const Icon = styled.div`
-  font-size: 20px;
-  margin: 0 4px;
 `;

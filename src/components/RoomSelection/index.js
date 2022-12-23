@@ -1,25 +1,21 @@
 import styled from 'styled-components';
 import RoomsOption from './RoomsOption';
-import {  useEffect, useState } from 'react';
+import { useState } from 'react';
 import RegisterBooking from './RegisterBooking.js';
-import useBooking from '../../hooks/api/useBooking';
 
 export default function RoomsSelection({ hotelSelected }) {
-  const [roomSelected, setRoomSelected] = useState(0);
-  const [booking, setBooking] = useState();
-  const { getBooking } = useBooking();
-
-  useEffect(async() => setBooking(await getBooking()), []);
+  const { hasBooking, Rooms: rooms } = hotelSelected;
+  const [roomSelected, setRoomSelected] = useState(() => hasBooking ? hasBooking.roomId : false);
 
   return (
     <Container>
       <SubTitle>Ótima pedida! Agora escolha seu quarto</SubTitle>
       <Rooms>
-        {hotelSelected.Rooms.map((room) => (
-          <RoomsOption key={room.id} room={room} index={room.id} roomSelected={roomSelected} setRoomSelected={setRoomSelected} booking={booking}/>
+        {rooms.map((room) => (
+          <RoomsOption key={room.id} room={room} roomSelected={roomSelected} setRoomSelected={setRoomSelected} />
         ))}
       </Rooms>
-      <RegisterBooking roomSelected={roomSelected} />
+      {roomSelected && <RegisterBooking roomSelected={roomSelected} />}
     </Container>
   );
 }
