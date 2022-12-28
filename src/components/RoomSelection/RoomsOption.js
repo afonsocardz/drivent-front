@@ -1,50 +1,29 @@
 import styled from 'styled-components';
-import { toast } from 'react-toastify';
-import { useState } from 'react';
 import Option from './Option.js';
 
-function optionInitialState(room, roomSelected) {
-  const arr = [];
-  const vacancies = room.capacity - room._count.Booking;
-  for (let i = 0; i < room.capacity; i++) {
-    const option = {
-      id: i,
-      status: 'empty',
-      roomId: room.id,
-    };
-    if (i < vacancies) {
-      arr.push(option);
-    } else {
-      if (roomSelected ) {
-        arr.push({ ...option, status: 'selected' });
-      } else {
-        arr.push({ ...option, status: 'reserved' });
-      }
+export default function RoomsOption({ room, setRoomSelected, roomSelected, hasBooking }) {
+  function clickHandler(optionId) {
+    if (hasBooking) {
+      if (hasBooking.roomId === room.id) return;
     }
+    setRoomSelected({ roomId: room.id, optionId });
   }
-  return arr;
-}
-
-export default function RoomsOption({ room, setRoomSelected, roomSelected }) {
-  const [options, setOptions] = useState(optionInitialState(room, roomSelected));
-  function roomChoice(room) {
-    const isNotAvailable = room._count.Booking === room.capacity;
-
-    isNotAvailable ?
-      toast(`O quarto ${room.name} já está com sua capacidade máxima!`) :
-      setRoomSelected(room.id);
-  }
-
   return (
     <Room
-      onClick={() => roomChoice(room)}
-      isSelect={roomSelected}
+      isSelect={roomSelected.roomId}
       capacity={room.capacity}
-      i={room.id}
+      id={room.id}
       booking={room._count.Booking}
     >
       <Number>{room.name}</Number>
-      {options[0] && options.map(option => <Option key={option.id} option={option} setOptions={setOptions} roomSelected={roomSelected} />)}
+      {room.options.map(option =>
+        <Option
+          key={option.id}
+          option={option}
+          roomSelected={roomSelected}
+          clickHandler={clickHandler}
+          isFull={room.capacity === room._count.Booking} />
+      )}
     </Room>
   );
 }
@@ -64,7 +43,7 @@ const Room = styled.div`
   font-weight: bold;
   padding: 12px;
 
-  background-color: ${({ isSelect, i }) => (isSelect === i ? '#FFEED2' : '')};
+  background-color: ${({ isSelect, id }) => (isSelect === id ? '#FFEED2' : '')};
   background-color: ${({ capacity, booking }) => (capacity === booking ? '#EBEBEB' : '')};
   color: ${({ capacity, booking }) => (capacity === booking ? '#8B8B8B' : '')};
 

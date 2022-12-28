@@ -1,21 +1,42 @@
 import styled from 'styled-components';
 import RoomsOption from './RoomsOption';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import RegisterBooking from './RegisterBooking.js';
 
-export default function RoomsSelection({ hotelSelected }) {
-  const { hasBooking, Rooms: rooms } = hotelSelected;
-  const [roomSelected, setRoomSelected] = useState(() => hasBooking ? hasBooking.roomId : false);
+function normalizeRooms(rooms, hasBooking) {
+  const normalizedRooms = rooms.map((room) => {
+    const options = [];
+    const { capacity, _count, id: roomId } = room;
 
+    if (hasBooking.roomId === room.id) {
+      _count.Booking--;
+    }
+
+    for (let i = 0; i < capacity; i++) {
+      const option = { id: roomId * 100 + i };
+      const isReserved = i >= capacity - _count.Booking;
+      options.push({ ...option, isReserved });
+    }
+
+    return { ...room, _count, options };
+  });
+  return normalizedRooms;
+}
+
+export default function RoomsSelection({ hotelSelected }) {
+  const { hasBooking } = hotelSelected;
+  const [roomSelected, setRoomSelected] = useState(hasBooking ? { roomId: hasBooking.roomId, optionId: hasBooking.roomId * 100 } : { roomId: null, optionId: null });
+  const rooms = useMemo(() => normalizeRooms(hotelSelected.Rooms, hasBooking), [hotelSelected]);
   return (
     <Container>
-      <SubTitle>Ótima pedida! Agora escolha seu quarto</SubTitle>
+      <SubTitle>{hasBooking ? 'Escolha para qual quarto deseja trocar' : 'Ótima pedida! Agora escolha seu quarto'}</SubTitle>
       <Rooms>
         {rooms.map((room) => (
-          <RoomsOption key={room.id} room={room} roomSelected={roomSelected} setRoomSelected={setRoomSelected} />
+          <RoomsOption key={room.id} room={room} setRoomSelected={setRoomSelected} roomSelected={roomSelected} hasBooking={hasBooking} />
         ))}
+
       </Rooms>
-      {roomSelected && <RegisterBooking roomSelected={roomSelected} />}
+      {roomSelected.roomId && roomSelected.roomId !== hasBooking.roomId && <RegisterBooking roomSelected={roomSelected.roomId} hasBooking={hasBooking} />}
     </Container>
   );
 }

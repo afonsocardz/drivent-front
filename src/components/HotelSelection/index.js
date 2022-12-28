@@ -17,6 +17,7 @@ export default function HotelSelection({ hotels }) {
           ))}
       </HotelsWrapper>
       {selected.hotel && <RoomsSelection hotelSelected={selected.hotel} />}
+      {hotels[0].hasBooking && !selected.hotel && <ChangeRoomButton onClick={() => setSelected({ hotel: hotels[0] })}>Trocar de quarto</ChangeRoomButton>}
     </Container>
   );
 }
@@ -39,4 +40,24 @@ const SubTitle = styled.h5`
   color: #8e8e8e;
   font-size: 20px;
   margin-bottom: 18px;
+`;
+
+const ChangeRoomButton = styled.button`
+  all: unset;
+  width: 196px;
+  height: 40px;
+  background: #e0e0e0;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 20px;
+  font-size: 14px;
+  text-transform: uppercase;
+  text-align: center;
+
+  cursor: pointer;
 `;

@@ -4,7 +4,7 @@ import useSaveBooking from '../../hooks/api/useSaveBooking';
 export default function RegisterBooking({ roomSelected }) {
   const { saveBooking } = useSaveBooking();
 
-  return <Reserved onClick={newBooking}>{roomSelected === 0 ? 'ESCOLHA UM QUARTO' : 'RESERVAR QUARTO'}</Reserved>;
+  return <Reserved onClick={newBooking}>Reservar Quarto</Reserved>;
 
   function newBooking() {
     const body = { roomId: roomSelected };
@@ -28,6 +28,7 @@ const Reserved = styled.button`
   margin-top: 20px;
   font-size: 14px;
   text-align: center;
+  text-transform: uppercase;
 
   cursor: pointer;
 `;

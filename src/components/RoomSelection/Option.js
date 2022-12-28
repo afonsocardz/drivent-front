@@ -1,39 +1,17 @@
 import { IoPersonOutline } from 'react-icons/io5';
 import { BsFillPersonFill } from 'react-icons/bs';
 import styled from 'styled-components';
+import { memo } from 'react';
 
-export default function Option({ option, setOptions, roomSelected }) {
-  function clickHandler() {
-    setOptions((prev) =>
-      prev.map(item => {
-        if (item.status === 'selected') {
-          return { ...item, status: 'empty' };
-        }
-        if (item.id === option.id) {
-          return { ...item, status: 'selected' };
-        }
-        return item;
-      })
-    );
-  }
-
-  function optionHandler() {
-    if (option.status === 'empty') {
-      return <IoPersonOutline onClick={clickHandler} />;
-    }
-    if (option.roomId === roomSelected) {
-      return <IconFilled status={option.status} />;
-    } else {
-      return <IoPersonOutline onClick={clickHandler} />;
-    }
-  }
-
+const Option = ({ option, roomSelected, clickHandler, isFull }) => {
   return (
-    <IconContainer >
-      {optionHandler()}
+    <IconContainer  >
+      {!option.isReserved && option.id !== roomSelected.optionId ? <IoPersonOutline onClick={() => clickHandler(option.id)} /> : <IconFilled isFull={isFull} selection={{ id: option.id, selectionId: roomSelected.optionId }} />}
     </IconContainer>
   );
-}
+};
+
+export default memo(Option);
 
 const IconContainer = styled.div`
   font-size: 20px;
@@ -41,5 +19,10 @@ const IconContainer = styled.div`
 `;
 
 const IconFilled = styled(BsFillPersonFill)`
-  color: ${({ status }) => status === 'reserved' ? '#000' : '#FF4791'};
+  color: ${({ selection: { id, selectionId }, isFull }) => {
+    if (isFull) {
+      return 'gray';
+    }
+    return id !== selectionId ? '#000' : '#FF4791';
+  }};
 `;
