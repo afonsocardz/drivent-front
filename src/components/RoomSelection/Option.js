@@ -6,7 +6,7 @@ import { memo } from 'react';
 const Option = ({ option, roomSelected, clickHandler, isFull }) => {
   return (
     <IconContainer  >
-      {!option.isReserved && option.id !== roomSelected.optionId ? <IoPersonOutline onClick={() => clickHandler(option.id)} /> : <IconFilled isFull={isFull} selection={{ id: option.id, selectionId: roomSelected.optionId }} />}
+      {!option.isReserved && option.id !== roomSelected.optionId ? <IoPersonOutline onClick={() => clickHandler(option.id)} /> : <IconFilled isFull={isFull ? 'true' : ''} selection={{ id: option.id, selectionId: roomSelected.optionId }} />}
     </IconContainer>
   );
 };

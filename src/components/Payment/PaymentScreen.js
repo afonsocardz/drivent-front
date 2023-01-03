@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useTicket from '../../hooks/api/useTicket';
-import { getPayment } from '../../services/paymentApi';
-import { getTicket } from '../../services/ticketsApi';
 import CreditCardForm from './CreditCardForm';
 import PaymentConfirm from './PaymentConfirm';
 
