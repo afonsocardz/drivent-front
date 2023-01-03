@@ -3,8 +3,10 @@ import Typography from '@material-ui/core/Typography';
 import HotelOption from './HotelOption';
 import { useState } from 'react';
 import RoomsSelection from '../RoomSelection/index.js';
+import { useHotelsContext } from '../../contexts/HotelsInfoContext';
 
-export default function HotelSelection({ hotels }) {
+export default function HotelSelection() {
+  const { hotels } = useHotelsContext();
   const [selected, setSelected] = useState({ hotel: null });
   return (
     <Container>

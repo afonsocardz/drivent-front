@@ -1,30 +1,30 @@
 import styled from 'styled-components';
 import useSaveBooking from '../../hooks/api/useSaveBooking';
 import useUpdateBooking from '../../hooks/api/useUpdateBooking';
+import { useHotelsContext } from '../../contexts/HotelsInfoContext';
 
-export default function RegisterBooking({ roomSelected, booking }) {
+export default function RegisterBooking({ roomSelected, hasBooking }) {
   const { saveBooking } = useSaveBooking();
   const { updateBooking } = useUpdateBooking();
+  const { getHotelsInfo } = useHotelsContext();
+
+  const textHandler = !hasBooking ? 'Reservar quarto' : 'Trocar quarto';
 
   function newBooking() {
     const body = { roomId: roomSelected };
     const postB = saveBooking(body);
-    postB.then((data) => window.location.reload()).catch((err) => console.log(err));
+    postB.then((data) => getHotelsInfo()).catch((err) => console.log(err));
   }
 
   function changeRoom() {
     const body = { roomId: roomSelected };
-    const updateB = updateBooking(body);
-    updateB.then((data) => window.location.reload()).catch((err) => console.log(err));  
+    const updateB = updateBooking(body, hasBooking.bookingId);
+    updateB.then((data) => getHotelsInfo()).catch((err) => console.log(err));
   }
 
-  if(!booking) {
-    return <Reserved onClick={newBooking}>{roomSelected === 0 ? 'ESCOLHA UM QUARTO' : 'RESERVAR QUARTO'}</Reserved>;
-  } else if(roomSelected !== booking.Room.id && roomSelected) {
-    return <Reserved onClick={changeRoom}>TROCAR QUARTO</Reserved>;
-  } else {
-    return <></>;
-  }
+  return (
+    <Reserved onClick={!hasBooking ? newBooking : changeRoom}>{textHandler}</Reserved>
+  );
 }
 
 const Reserved = styled.button`

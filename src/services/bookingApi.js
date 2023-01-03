@@ -20,15 +20,16 @@ export async function getBooking(token) {
   return response.data;
 }
 
-export async function updateBooking(body, token) {
-  const booking = await getBooking(token);
-
-  const response = await api.put(`/booking/${booking.id}`, body, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
+export async function updateBooking(bookingId, body, token) {
+  try {
+    const response = await api.put(`/booking/${bookingId}`, body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
 }
 
