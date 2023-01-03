@@ -1,35 +1,29 @@
 import styled from 'styled-components';
-import IconCapacity from './IconCapacity.js';
-import { toast } from 'react-toastify';
+import Option from './Option.js';
 
-export default function RoomsOption({ room, index, setRoomSelected, roomSelected, booking }) {
-  const isRoomFull = room._count.Booking === room.capacity;
-
-  function roomChoice(room) {
-    if (isRoomFull) {
-      //TODO mensagem quarto sem vaga
-      toast(`O quarto ${room.name} já está com sua capacidade máxima!`);
-      return false;
+export default function RoomsOption({ room, setRoomSelected, roomSelected, hasBooking }) {
+  function clickHandler(optionId) {
+    if (hasBooking) {
+      if (hasBooking.roomId === room.id) return;
     }
-    setRoomSelected(room.id);
+    setRoomSelected({ roomId: room.id, optionId });
   }
-
-  let roomId = 0;
-
-  if(booking) {
-    roomId = booking.Room.id;
-  }
-
   return (
     <Room
-      onClick={() => roomChoice(room)}
-      isSelect={roomSelected}
-      i={index}
+      isSelect={roomSelected.roomId}
       capacity={room.capacity}
+      id={room.id}
       booking={room._count.Booking}
     >
       <Number>{room.name}</Number>
-      <Icon>{IconCapacity(room, roomId)}</Icon>
+      {room.options.map(option =>
+        <Option
+          key={option.id}
+          option={option}
+          roomSelected={roomSelected}
+          clickHandler={clickHandler}
+          isFull={room.capacity === room._count.Booking} />
+      )}
     </Room>
   );
 }
@@ -49,7 +43,7 @@ const Room = styled.div`
   font-weight: bold;
   padding: 12px;
 
-  background-color: ${({ isSelect, i }) => (isSelect === i ? '#FFEED2' : '')};
+  background-color: ${({ isSelect, id }) => (isSelect === id ? '#FFEED2' : '')};
   background-color: ${({ capacity, booking }) => (capacity === booking ? '#EBEBEB' : '')};
   color: ${({ capacity, booking }) => (capacity === booking ? '#8B8B8B' : '')};
 
@@ -58,9 +52,4 @@ const Room = styled.div`
 
 const Number = styled.div`
   font-size: 16px;
-`;
-
-const Icon = styled.div`
-  font-size: 20px;
-  margin: 0 4px;
 `;

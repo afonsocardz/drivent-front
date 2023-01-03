@@ -10,7 +10,7 @@ export default function useUpdateBooking() {
     loading: saveUpdateLoading,
     error: saveUpdateError,
     act: updateBooking,
-  } = useAsync((data) => bookingApi.updateBooking(data, token), false);
+  } = useAsync((data, bookingId) => bookingApi.updateBooking(bookingId, data, token), false);
 
   return {
     saveUpdateLoading,
