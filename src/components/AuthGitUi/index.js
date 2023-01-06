@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
+
+import useSignUpGitHub from '../../hooks/api/useSignUpGitHub';
+import { toast } from 'react-toastify';
+import { signInGitHub } from '../../services/authApi';
+import UserContext from '../../contexts/UserContext';
+
+import { useNavigate } from 'react-router-dom';
 
 const config = {
   apiKey: 'AIzaSyBVoR_aT-aUH4BM5_4B1YoITVcDylL6BAU',
@@ -14,21 +21,59 @@ const config = {
 };
 firebase.initializeApp(config);
 
-const uiConfig = {
-  signInFlow: 'popup',
-  signInSuccessUrl: '/enroll',
-  signInOptions: [
-    firebase.auth.GithubAuthProvider.PROVIDER_ID,
-  ],
-  callbacks: {
-    signInSuccess: (item) => console.log(item)
-  }
-};
-
 export default function SignInGitHub() {
+  const { signUpGitHub } = useSignUpGitHub();
+  const { setUserData } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const uiConfig = {
+    signInFlow: 'popup',
+    signInOptions: [
+      firebase.auth.GithubAuthProvider.PROVIDER_ID,
+    ],
+    callbacks: {
+      signInSuccessWithAuthResult: (data) => {
+        const promise = signUpGitHub(data.user.email);
+
+        promise.then(() => {
+          toast('Usuário cadastrado com sucesso!');
+
+          const userData = signInGitHub(data.user.email);
+
+          userData.then((data) => {
+            setUserData(data);
+            toast('Login realizado com sucesso!');
+            navigate('/dashboard');
+          });
+
+          userData.catch((error) => {
+            toast('O cadastro foi concluído, mas não foi possível fazer login');
+          });
+        });
+
+        promise.catch((error) => {
+          if(error.response.status === 409) {
+            const userData =  signInGitHub(data.user.email);
+
+            userData.then((data) => {
+              setUserData(data);
+              toast('Login realizado com sucesso!');
+              navigate('/dashboard');
+            });
+
+            userData.catch((error) => {
+              toast('Não foi possível fazer login!');
+            });
+          }
+        });
+        return false;
+      }
+    }
+  };
+
   return (
     <div>
-      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
+      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
     </div>
   );
 };
