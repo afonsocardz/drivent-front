@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +13,8 @@ import EventInfoContext from '../../contexts/EventInfoContext';
 import UserContext from '../../contexts/UserContext';
 
 import useSignIn from '../../hooks/api/useSignIn';
+
+import SignInGitHub from '../../components/AuthGitUi';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -52,6 +54,7 @@ export default function SignIn() {
           <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
         </form>
       </Row>
+      <SignInGitHub/>
       <Row>
         <Link to="/enroll">Não possui login? Inscreva-se</Link>
       </Row>
