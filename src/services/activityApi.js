@@ -12,3 +12,16 @@ export async function getActivitiesByDateId(dateId, token) {
     return error.response;
   }
 }
+
+export async function getActivities(token) {
+  try {
+    const response = await api.get('/activities', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+}
