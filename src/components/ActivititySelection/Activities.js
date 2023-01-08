@@ -33,12 +33,13 @@ export default function Activities({ activities }) {
   );
 
   function renderCards(act) {
+    const oneHour = 60;
     return (
-      <ActivityCard>
+      <ActivityCard durationRelation={act.durationMinutes / oneHour}>
         <InfoActivity>
           <h1>{act.name}</h1>
           <h2>
-            {act.startTime[0]} - {act.endTime[3]}
+            {act.startTime} - {act.endTime}
           </h2>
         </InfoActivity>
         <DiviserCardActivity />
@@ -89,7 +90,7 @@ const ActivityCard = styled.div`
   cursor: pointer;
 
   //adicionar valor inteiro para dimensionar altura do card, via props
-  height: ${1 * 80}px;
+  height: ${({ durationRelation }) => durationRelation * 80}px;
 `;
 
 const InfoActivity = styled.div`
@@ -107,7 +108,5 @@ const InfoActivity = styled.div`
 const DiviserCardActivity = styled.div`
   width: 1px;
   background-color: #cfcfcf;
-
-  //adicionar valor inteiro para dimensionar altura da divisão, via props
-  height: ${1 * 100}%;
+  height: 100%;
 `;
