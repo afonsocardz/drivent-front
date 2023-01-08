@@ -21,7 +21,7 @@ export default function ActivitySelection() {
       <StyledTypography variant="h4">Escolha de atividades</StyledTypography>
       <SubTitle> {daySelected ? '' : 'Primeiro, filtre pelo dia do evento:'} </SubTitle>
       <ContainerButtons>
-        {activities ? activities.daysFiltered.map((day) => renderButtonsSelectDay({ day, daySelected })) : ''}
+        {activities ? activities.daysFiltered.map((date) => renderButtonsSelectDay({ date, daySelected })) : ''}
       </ContainerButtons>
       {daySelected ? (
         <Activities activities={activities.activitiesValids.filter((act) => act.day === daySelected)} />
@@ -31,9 +31,10 @@ export default function ActivitySelection() {
     </Container>
   );
 
-  function renderButtonsSelectDay({ day, daySelected }) {
+  function renderButtonsSelectDay({ date, daySelected }) {
+    const day = date.day;
     const dayNumber = day;
-    const weekDay = 'receberBack';
+    const weekDay = date.weekDay;
     return (
       <Button onClick={() => setDaySelected(day)} key={day} selected={day} daySelected={daySelected}>
         {weekDay}, {dayNumber}
