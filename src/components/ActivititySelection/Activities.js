@@ -52,6 +52,11 @@ const Container = styled.div`
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   height: 460px;
   display: flex;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Title = styled.div`
@@ -64,14 +69,23 @@ const Title = styled.div`
 
 const AuditoriumMain = styled.div`
   width: 33%;
+  @media (max-width: 600px) {
+    width: 80%;
+  }
 `;
 
 const AuditoriumSide = styled.div`
   width: 33%;
+  @media (max-width: 600px) {
+    width: 80%;
+  }
 `;
 
 const WorkshopRoom = styled.div`
   width: 33%;
+  @media (max-width: 600px) {
+    width: 80%;
+  }
 `;
 
 const ContainerActivities = styled.div`
