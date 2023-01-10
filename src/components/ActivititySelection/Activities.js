@@ -1,6 +1,11 @@
 import styled from 'styled-components';
+import { useState } from 'react';
+import { RiLoginBoxLine } from 'react-icons/ri';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 export default function Activities({ activities }) {
+  const [activitySelected, setActivitySelected] = useState(null);
+
   return (
     <Container>
       <AuditoriumMain>
@@ -34,8 +39,9 @@ export default function Activities({ activities }) {
 
   function renderCards(act) {
     const oneHour = 60;
+    const capacity = act.capacity;
     return (
-      <ActivityCard durationRelation={act.durationMinutes / oneHour}>
+      <ActivityCard durationRelation={act.durationMinutes / oneHour} key={act.id} onClick={() => subscriptionActivity(act)}>
         <InfoActivity>
           <h1>{act.name}</h1>
           <h2>
@@ -43,10 +49,34 @@ export default function Activities({ activities }) {
           </h2>
         </InfoActivity>
         <DiviserCardActivity />
+
+        <IconVacancy capacity={capacity}>
+          {capacity > 0 ? <RiLoginBoxLine /> : <AiOutlineCloseCircle />}
+          <p>{capacity > 0 ? `${capacity} vagas` : 'Esgotado'}</p>
+        </IconVacancy>
       </ActivityCard>
     );
   }
+
+  function subscriptionActivity(act) {
+    console.log(act);
+  }
 }
+
+const IconVacancy = styled.div`
+  color: ${({ capacity }) => (capacity > 0 ? '#078632' : '#CC6666')};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30%;
+  font-size: 24px;
+  flex-direction: column;
+
+  p {
+    font-size: 9px;
+    margin-top: 6px;
+  }
+`;
 
 const Container = styled.div`
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;

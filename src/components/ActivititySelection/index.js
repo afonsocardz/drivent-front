@@ -13,7 +13,6 @@ export default function ActivitySelection() {
   useEffect(async() => {
     const Allactivities = await getActivities();
     setActivities(Allactivities);
-    console.log(Allactivities);
   }, []);
 
   return (
