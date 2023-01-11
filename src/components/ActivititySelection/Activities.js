@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { RiLoginBoxLine } from 'react-icons/ri';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { AiOutlineCloseCircle, AiOutlineCheckCircle } from 'react-icons/ai';
 
 export default function Activities({ activities }) {
   const [activitySelected, setActivitySelected] = useState(null);
@@ -41,7 +41,12 @@ export default function Activities({ activities }) {
     const oneHour = 60;
     const capacity = act.capacity;
     return (
-      <ActivityCard durationRelation={act.durationMinutes / oneHour} key={act.id} onClick={() => subscriptionActivity(act)}>
+      <ActivityCard
+        durationRelation={act.durationMinutes / oneHour}
+        userIsSubscribe={act.userIsSubscribe}
+        key={act.id}
+        onClick={() => subscriptionActivity(act)}
+      >
         <InfoActivity>
           <h1>{act.name}</h1>
           <h2>
@@ -51,8 +56,15 @@ export default function Activities({ activities }) {
         <DiviserCardActivity />
 
         <IconVacancy capacity={capacity}>
-          {capacity > 0 ? <RiLoginBoxLine /> : <AiOutlineCloseCircle />}
-          <p>{capacity > 0 ? `${capacity} vagas` : 'Esgotado'}</p>
+          {act.userIsSubscribe ? (
+            <AiOutlineCheckCircle />
+          ) : capacity > 0 ? (
+            <RiLoginBoxLine />
+          ) : (
+            <AiOutlineCloseCircle />
+          )}
+
+          <p>{act.userIsSubscribe ? 'Inscrito' : capacity > 0 ? `${capacity} vagas` : 'Esgotado'}</p>
         </IconVacancy>
       </ActivityCard>
     );
@@ -73,7 +85,7 @@ const IconVacancy = styled.div`
   flex-direction: column;
 
   p {
-    font-size: 9px;
+    font-size: 11px;
     margin-top: 6px;
   }
 `;
@@ -121,10 +133,10 @@ const WorkshopRoom = styled.div`
 const ContainerActivities = styled.div`
   border: solid 1px #d7d7d7;
   height: 90%;
+  overflow: scroll;
 `;
 
 const ActivityCard = styled.div`
-  background-color: #f1f1f1;
   margin: 9px 14px 10px 9px;
   width: 90%;
   border-radius: 5px;
@@ -132,6 +144,7 @@ const ActivityCard = styled.div`
   padding: 10px;
   font-size: 14px;
   cursor: pointer;
+  background-color: ${({ userIsSubscribe }) => (userIsSubscribe ? '#D0FFDB' : '#f1f1f1')};
 
   //adicionar valor inteiro para dimensionar altura do card, via props
   height: ${({ durationRelation }) => durationRelation * 80}px;

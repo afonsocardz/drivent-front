@@ -32,7 +32,7 @@ export default function ActivitySelection() {
 
   function renderButtonsSelectDay({ date, daySelected }) {
     const day = date.day;
-    const dayNumber = day;
+    const dayNumber = date.dayAndMonth;
     const weekDay = date.weekDay;
     return (
       <Button onClick={() => setDaySelected(day)} key={day} selected={day} daySelected={daySelected}>
@@ -80,5 +80,10 @@ const Button = styled.div`
   &:hover {
     height: 42px;
     width: 132px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 4px;
+    width: 140px;
   }
 `;
