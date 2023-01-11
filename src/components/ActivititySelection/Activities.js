@@ -40,6 +40,7 @@ export default function Activities({ activities }) {
   function renderCards(act) {
     const oneHour = 60;
     const capacity = act.capacity;
+    const vacancy = capacity === 1 ? 'vaga' : 'vagas';
     return (
       <ActivityCard
         durationRelation={act.durationMinutes / oneHour}
@@ -64,7 +65,7 @@ export default function Activities({ activities }) {
             <AiOutlineCloseCircle />
           )}
 
-          <p>{act.userIsSubscribe ? 'Inscrito' : capacity > 0 ? `${capacity} vagas` : 'Esgotado'}</p>
+          <p>{act.userIsSubscribe ? 'Inscrito' : capacity > 0 ? `${capacity} ${vacancy}` : 'Esgotado'}</p>
         </IconVacancy>
       </ActivityCard>
     );
