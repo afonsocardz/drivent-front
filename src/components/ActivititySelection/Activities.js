@@ -1,10 +1,22 @@
 import styled from 'styled-components';
-import { useState } from 'react';
 import { RiLoginBoxLine } from 'react-icons/ri';
+import { toast } from 'react-toastify';
 import { AiOutlineCloseCircle, AiOutlineCheckCircle } from 'react-icons/ai';
+import useSaveSubscribe from '../../hooks/api/useSaveSubscribe';
+import { useActivitiesContext } from '../../contexts/ActivitiesInfoContext';
 
 export default function Activities({ activities }) {
-  const [activitySelected, setActivitySelected] = useState(null);
+  const { saveSubscribe } = useSaveSubscribe();
+  const { getActivitiesInfo } = useActivitiesContext();
+
+  function newSubscribe(act) {
+    if (act.capacity === 0) return toast('Atividade sem vagas disponíveis');
+    if (act.userIsSubscribe) return toast('Você já se inscreveu nessa atividade');
+
+    const body = { activityId: act.id };
+    const postSubscribe = saveSubscribe(body);
+    postSubscribe.then((res) => (toast(res.data), getActivitiesInfo())).catch((err) => console.log(err));
+  }
 
   return (
     <Container>
@@ -46,7 +58,7 @@ export default function Activities({ activities }) {
         durationRelation={act.durationMinutes / oneHour}
         userIsSubscribe={act.userIsSubscribe}
         key={act.id}
-        onClick={() => subscriptionActivity(act)}
+        onClick={() => newSubscribe(act)}
       >
         <InfoActivity>
           <h1>{act.name}</h1>
@@ -56,7 +68,7 @@ export default function Activities({ activities }) {
         </InfoActivity>
         <DiviserCardActivity />
 
-        <IconVacancy capacity={capacity}>
+        <IconVacancy capacity={capacity} userIsSubscribe={act.userIsSubscribe}>
           {act.userIsSubscribe ? (
             <AiOutlineCheckCircle />
           ) : capacity > 0 ? (
@@ -70,14 +82,11 @@ export default function Activities({ activities }) {
       </ActivityCard>
     );
   }
-
-  function subscriptionActivity(act) {
-    console.log(act);
-  }
 }
 
 const IconVacancy = styled.div`
   color: ${({ capacity }) => (capacity > 0 ? '#078632' : '#CC6666')};
+  color: ${({ userIsSubscribe }) => (userIsSubscribe ? '#078632' : '')};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,6 +123,7 @@ const AuditoriumMain = styled.div`
   width: 33%;
   @media (max-width: 600px) {
     width: 80%;
+    margin-bottom: 20px;
   }
 `;
 
@@ -121,6 +131,7 @@ const AuditoriumSide = styled.div`
   width: 33%;
   @media (max-width: 600px) {
     width: 80%;
+    margin-bottom: 20px;
   }
 `;
 
@@ -128,6 +139,7 @@ const WorkshopRoom = styled.div`
   width: 33%;
   @media (max-width: 600px) {
     width: 80%;
+    margin-bottom: 20px;
   }
 `;
 
@@ -146,9 +158,11 @@ const ActivityCard = styled.div`
   font-size: 14px;
   cursor: pointer;
   background-color: ${({ userIsSubscribe }) => (userIsSubscribe ? '#D0FFDB' : '#f1f1f1')};
-
-  //adicionar valor inteiro para dimensionar altura do card, via props
   height: ${({ durationRelation }) => durationRelation * 80}px;
+
+  &:hover {
+    box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const InfoActivity = styled.div`

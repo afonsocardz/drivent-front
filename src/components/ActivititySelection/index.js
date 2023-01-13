@@ -1,19 +1,12 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
-import useActivities from '../../hooks/api/useActivities.js';
 import Activities from './Activities.js';
+import { useActivitiesContext } from '../../contexts/ActivitiesInfoContext';
 
 export default function ActivitySelection() {
+  const { activities } = useActivitiesContext();
   const [daySelected, setDaySelected] = useState();
-  const [activities, setActivities] = useState();
-  const { getActivities } = useActivities();
-
-  // TODO remover espaço após async
-  useEffect(async() => {
-    const Allactivities = await getActivities();
-    setActivities(Allactivities);
-  }, []);
 
   return (
     <Container>
@@ -32,8 +25,8 @@ export default function ActivitySelection() {
 
   function renderButtonsSelectDay({ date, daySelected }) {
     const day = date.day;
-    const dayNumber = date.dayAndMonth;
     const weekDay = date.weekDay;
+    const dayNumber = date.dayAndMonth;
     return (
       <Button onClick={() => setDaySelected(day)} key={day} selected={day} daySelected={daySelected}>
         {weekDay}, {dayNumber}

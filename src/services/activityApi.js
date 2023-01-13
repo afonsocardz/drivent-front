@@ -26,7 +26,7 @@ export async function getActivities(token) {
   }
 }
 
-export async function postSubscriptionActivity(token, body) {
+export async function postSubscribe(body, token) {
   try {
     const response = await api.post('/activities', body, {
       headers: {
