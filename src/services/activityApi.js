@@ -25,3 +25,16 @@ export async function getActivities(token) {
     return error.response;
   }
 }
+
+export async function postSubscribe(body, token) {
+  try {
+    const response = await api.post('/activities', body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+}
